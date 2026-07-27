@@ -1,0 +1,5 @@
+# > Spotify 节点绑定规则
+DOMAIN-SUFFIX, spotify.com
+DOMAIN-SUFFIX, spotifycdn.com
+DOMAIN-KEYWORD, spotify
+USER-AGENT, Spotify*
