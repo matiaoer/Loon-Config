@@ -1,0 +1,19 @@
+# > 微信 & 腾讯服务直连规则
+# 微信主要通信与 API 域名
+DOMAIN-SUFFIX, wechat.com
+DOMAIN-SUFFIX, qpic.cn
+DOMAIN-SUFFIX, qlogo.cn
+DOMAIN-SUFFIX, servicewechat.com
+DOMAIN-SUFFIX, wx.qq.com
+DOMAIN-KEYWORD, wechat
+
+# 微信 CDN 与腾讯基础服务（保障视频号、朋友圈图片、小程序加载速度）
+DOMAIN-SUFFIX, tencent.com
+DOMAIN-SUFFIX, qq.com
+DOMAIN-SUFFIX, myqcloud.com
+DOMAIN-SUFFIX, gtimg.com
+DOMAIN-SUFFIX, gtimg.cn
+
+# 微信应用 User-Agent 匹配（可选，双重保障）
+USER-AGENT, WeChat*
+USER-AGENT, MicroMessenger*
