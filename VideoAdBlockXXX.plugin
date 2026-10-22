@@ -1,21 +1,17 @@
 #!name = Custom Video App AdBlock
-#!desc = 终极硬编码底层阻断
+#!desc = 精准路径拦截与空响应劫持
 #!author = Custom
 
 [Rule]
-# 1. 强力泛域名与关键字黑洞
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
-DOMAIN-KEYWORD, 918api, REJECT
-DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 2. 终极正则：无条件直接拒绝所有带随机 8 位 api 的请求
-^https?:\/\/api\.[a-z]{8}\.com\/ - reject
-
-# 3. 拦截任何带广告路径的链接
-^https?:\/\/.*\/.*(splash|ad|startup|banner|notice|开屏|广告).*$ - reject
+# 1. 针对所有动态域名下的广告路径进行拦截，并直接伪造 200 状态码返回空内容
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/[Aa]d\/.* - reject_dict(200)
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/IndexList\/homeFloatAd - reject_dict(200)
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/Resource\/CommentAd - reject_dict(200)
 
 [MITM]
-# 4. 只精准解密极小范围，保障 Gemini 绝对正常
+# 2. 精准解密刚才抓包中出现过的后端域名，确保重写路径能生效
 hostname = *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
