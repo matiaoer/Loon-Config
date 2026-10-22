@@ -1,6 +1,16 @@
 #!name = Custom Video App AdBlock
-#!desc = 终极通杀开屏与暂停广告
+#!desc = 终极通杀开屏与暂停广告并加入DNS黑洞防冷启动抢跑
 #!author = Custom
+
+[Host]
+# 0. 终极底层 DNS 黑洞：开机瞬间直接掐断域名解析，杜绝冷启动抢跑
+*.xqe4cxu.com = 0.0.0.0
+*.syq8gvw.com = 0.0.0.0
+*.zjypp7x.com = 0.0.0.0
+*.wtwvm3.com = 0.0.0.0
+*.jjawa.com = 0.0.0.0
+*.emw5es6.com = 0.0.0.0
+*.sdapi.* = 0.0.0.0
 
 [Rule]
 # 1. 强力泛域名后缀拦截所有 sdapi 变体
