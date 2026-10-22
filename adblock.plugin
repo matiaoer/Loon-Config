@@ -1,0 +1,22 @@
+[Name]
+Custom Video App AdBlock
+
+[Description]
+Author = Custom
+Description = 针对看视频类 App 的开屏及动态域名广告拦截
+
+[Rule]
+# 1. 核心特征域名与广告联盟关键字拦截
+DOMAIN-KEYWORD, kanshipin, REJECT
+DOMAIN-KEYWORD, tkfupxqu, REJECT
+
+# 2. 如果这些动态域名属于广告或统计，可按需放开下面这行进行泛匹配拦截
+# DOMAIN-KEYWORD, 5h5hbfhh, REJECT
+
+[Rewrite]
+# 3. 拦截带有关键词的 URL 请求
+^https?:\/\/.*\.kanshipin.*\/ - REJECT
+^https?:\/\/.*\/.*\/splash\/ - REJECT
+
+[Script]
+# 4. 预留脚本位：如果阻断导致 App 报错，可后续配合 JS 清空返回数据
