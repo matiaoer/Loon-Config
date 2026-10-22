@@ -3,7 +3,7 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 通过脚本精准清洗视频App广告
+Description = 结合 JS 脚本精准清洗开屏广告
 
 [Rule]
 DOMAIN-KEYWORD, kanshipin, REJECT
@@ -13,5 +13,5 @@ DOMAIN-KEYWORD, sdapi, REJECT
 ^https?:\/\/.*\/.*(splash|ad|startup|banner).*$ - REJECT
 
 [Script]
-# 核心：拦截响应体并交由本地或远程 JS 脚本处理（这里以处理开屏或数据接口为例）
-http-response ^https?:\/\/(api\.[a-z]{8}\.com|.*sdapi.*)\/.* script-path=https://raw.githubusercontent.com/你的GitHub用户名/仓库名/main/adclean.js, requires-body=true, tag=App去广告净化脚本
+# 使用你刚刚生成的 adclean.js 直链进行动态清洗
+http-response ^https?:\/\/(api\.[a-z]{8}\.com|.*sdapi.*|.*kanshipin.*)\/.* script-path=https://raw.githubusercontent.com/matiaoer/Loon-Config/refs/heads/main/adclean.js,requires-body=true,max-size=0,tag=视频App去广告净化
