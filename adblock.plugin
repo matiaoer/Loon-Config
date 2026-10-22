@@ -3,24 +3,15 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 正则强制拦截 8 位随机域名及广告接口
+Description = 通过脚本精准清洗视频App广告
 
 [Rule]
-# 1. 保留基础关键字拦截
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
-DOMAIN-KEYWORD, 918api, REJECT
-DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 2. 终极正则：直接在 URL 层面拦截所有形如 api.xxxxxx.com (8位随机字母) 的请求
-^https?:\/\/api\.[a-z]{8}\.com\/ - REJECT
-
-# 3. 拦截其他变体 api 域名
-^https?:\/\/[a-z0-9-]+\.kanshipin.*\/ - REJECT
-^https?:\/\/[a-z0-9-]+\.sdapi.*\/ - REJECT
-
-# 4. 拦截常见广告闪屏路径
-^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - REJECT
+^https?:\/\/.*\/.*(splash|ad|startup|banner).*$ - REJECT
 
 [Script]
+# 核心：拦截响应体并交由本地或远程 JS 脚本处理（这里以处理开屏或数据接口为例）
+http-response ^https?:\/\/(api\.[a-z]{8}\.com|.*sdapi.*)\/.* script-path=https://raw.githubusercontent.com/你的GitHub用户名/仓库名/main/adclean.js, requires-body=true, tag=App去广告净化脚本
