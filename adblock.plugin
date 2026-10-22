@@ -3,27 +3,27 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 动态域名及广告接口终极通杀拦截
+Description = 正则通杀 8位随机字母动态 API 域名
 
 [Rule]
-# 1. 拦截所有包含 api 前缀和常见广告特征的动态域名关键字
-DOMAIN-KEYWORD, api., REJECT
-DOMAIN-KEYWORD, sdapi, REJECT
-DOMAIN-KEYWORD, 918api, REJECT
-DOMAIN-KEYWORD, haiwaiapi, REJECT
-DOMAIN-KEYWORD, kanshipin, REJECT
-
-# 2. 针对你日志里频繁出现的动态域名特征做模糊匹配
+# 1. 匹配并拒绝形如 api.xxxxxx.com 这种 8 位随机字母的轮询后端
 DOMAIN-KEYWORD, cjxxpgkq, REJECT
 DOMAIN-KEYWORD, tezpgdzn, REJECT
 DOMAIN-KEYWORD, bmjb2mk7, REJECT
-DOMAIN-KEYWORD, rqqakqyn, REJECT
 DOMAIN-KEYWORD, 46d5umpk, REJECT
+DOMAIN-KEYWORD, rqqakqyn, REJECT
 DOMAIN-KEYWORD, 5h5hbfhh, REJECT
+DOMAIN-KEYWORD, sef5w7, REJECT
+DOMAIN-KEYWORD, syq8gvw, REJECT
+DOMAIN-KEYWORD, zjypp7x, REJECT
+DOMAIN-KEYWORD, xqe4cxu, REJECT
+DOMAIN-KEYWORD, mxtxqe, REJECT
 
 [Rewrite]
-# 3. 强力重写：只要 URL 路径里带有 api 且夹杂随机后缀的，统统返回空或拦截
-^https?:\/\/.*-api.*\/ - REJECT
+# 2. 核心大招：使用正则表达式拦截所有匹配 api.[a-z]{8}.com 的请求
+^https?:\/\/api\.[a-z]{8}\.com\/ - REJECT
+
+# 3. 拦截常规广告和闪屏路径
 ^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - REJECT
 
 [Script]
