@@ -3,31 +3,24 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 强力全面拦截新旧 API 及 sdapi 动态域名
+Description = 正则强制拦截 8 位随机域名及广告接口
 
 [Rule]
-# 1. 强力通杀所有带 sdapi 和 kanshipin 的关键字
-DOMAIN-KEYWORD, sdapi, REJECT
+# 1. 保留基础关键字拦截
 DOMAIN-KEYWORD, kanshipin, REJECT
-DOMAIN-KEYWORD, newapi, REJECT
+DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 
-# 2. 泛域名后缀直接锁死（针对近期高频出现的域名）
-DOMAIN-SUFFIX, kanshipinaxsdf.com, REJECT
-DOMAIN-SUFFIX, u4gdp3.com, REJECT
-DOMAIN-SUFFIX, 4zu76s.com, REJECT
-DOMAIN-SUFFIX, re3k7n.com, REJECT
-DOMAIN-SUFFIX, use3p2m.com, REJECT
-DOMAIN-SUFFIX, g4k74qn.com, REJECT
-DOMAIN-SUFFIX, 6ne6zmh.com, REJECT
-DOMAIN-SUFFIX, tymnpk4.com, REJECT
-
 [Rewrite]
-# 3. 正则表达式强制阻断所有包含 sdapi 或 kanshipin 的网址
-^https?:\/\/.*sdapi.*\/ - REJECT
-^https?:\/\/.*kanshipin.*\/ - REJECT
-^https?:\/\/.*newapi.*\/ - REJECT
+# 2. 终极正则：直接在 URL 层面拦截所有形如 api.xxxxxx.com (8位随机字母) 的请求
+^https?:\/\/api\.[a-z]{8}\.com\/ - REJECT
+
+# 3. 拦截其他变体 api 域名
+^https?:\/\/[a-z0-9-]+\.kanshipin.*\/ - REJECT
+^https?:\/\/[a-z0-9-]+\.sdapi.*\/ - REJECT
+
+# 4. 拦截常见广告闪屏路径
 ^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - REJECT
 
 [Script]
