@@ -1,28 +1,23 @@
 #!name = Custom Video App AdBlock
-#!desc = 针对视频App开屏广告及图片域名的精准拦截
+#!desc = 终极全开拦截
 #!author = Custom
 
 [Rule]
-# 1. 直接阻断疑似开屏广告的图片域名与跳转域名
+DOMAIN-SUFFIX, wtwvm3.com, REJECT
+DOMAIN-SUFFIX, tnw4m9b.com, REJECT
+DOMAIN-SUFFIX, moe3dze.com, REJECT
+DOMAIN-SUFFIX, gq89em.com, REJECT
 DOMAIN-SUFFIX, jjawa.com, REJECT
 DOMAIN-SUFFIX, emw5es6.com, REJECT
-DOMAIN-KEYWORD, jjawa, REJECT
-DOMAIN-KEYWORD, emw5es6, REJECT
-
-# 2. 之前的广告/外围接口一并封锁
+DOMAIN-SUFFIX, tkfupxqu.com, REJECT
+DOMAIN-SUFFIX, 5h5hbfhh.com, REJECT
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 
-# 3. 备选方案：如果上面还拦不住，把下面这4行的井号(#)删掉试试（注意：如果删掉井号后App打不开，说明这是正常业务接口，需再把井号加回来）
-# DOMAIN-SUFFIX, wtwvm3.com, REJECT
-# DOMAIN-SUFFIX, tnw4m9b.com, REJECT
-# DOMAIN-SUFFIX, moe3dze.com, REJECT
-# DOMAIN-SUFFIX, gq89em.com, REJECT
-
 [Rewrite]
-^https?:\/\/.*(jjawa|emw5es6).* - reject
+^https?:\/\/.*(wtwvm3|tnw4m9b|moe3dze|gq89em|jjawa|emw5es6|tkfupxqu|5h5hbfhh).* - reject
 
 [MITM]
-hostname = *.jjawa.com, *.emw5es6.com, *.wtwvm3.com, *.tnw4m9b.com, *.moe3dze.com, *.gq89em.com
+hostname = *.wtwvm3.com, *.tnw4m9b.com, *.moe3dze.com, *.gq89em.com, *.jjawa.com, *.emw5es6.com
