@@ -1,17 +1,33 @@
 #!name = Custom Video App AdBlock
-#!desc = 精准路径拦截与空响应劫持
+#!desc = 终极通杀 sdapi 及所有动态随机后端
 #!author = Custom
 
 [Rule]
-DOMAIN-KEYWORD, kanshipin, REJECT
+# 1. 强力泛域名后缀拦截所有 sdapi 变体
+DOMAIN-SUFFIX, 4zu76s.com, REJECT
+DOMAIN-SUFFIX, re3k7n.com, REJECT
+DOMAIN-SUFFIX, use3p2m.com, REJECT
+DOMAIN-SUFFIX, g4k74qn.com, REJECT
+DOMAIN-SUFFIX, 6ne6zmh.com, REJECT
+DOMAIN-SUFFIX, tymnpk4.com, REJECT
+DOMAIN-SUFFIX, u4gdp3.com, REJECT
+DOMAIN-SUFFIX, kanshipinaxsdf.com, REJECT
+
+# 2. 核心关键字全局强杀
 DOMAIN-KEYWORD, sdapi, REJECT
+DOMAIN-KEYWORD, kanshipin, REJECT
+DOMAIN-KEYWORD, newapi, REJECT
+DOMAIN-KEYWORD, 918api, REJECT
+DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 1. 针对所有动态域名下的广告路径进行拦截，并直接伪造 200 状态码返回空内容
+# 3. 强力正则阻断所有 sdapi、newapi 以及 8 位随机 API
+^https?:\/\/.*sdapi.*\/ - reject
+^https?:\/\/.*newapi.*\/ - reject
+^https?:\/\/api\.[a-z]{8}\.com\/ - reject
 ^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/[Aa]d\/.* - reject_dict(200)
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/IndexList\/homeFloatAd - reject_dict(200)
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/Resource\/CommentAd - reject_dict(200)
+^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - reject
 
 [MITM]
-# 2. 精准解密刚才抓包中出现过的后端域名，确保重写路径能生效
-hostname = *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
+# 4. 精准解密相关动态后端，绝不碰 *.com，完美保护 Gemini
+hostname = *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
