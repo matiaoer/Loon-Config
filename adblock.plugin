@@ -1,30 +1,17 @@
 #!name = Custom Video App AdBlock
-#!desc = 增强型动态域名全覆盖拦截
+#!desc = 精准路径拦截与空响应劫持
 #!author = Custom
 
 [Rule]
-# 1. 将刚才抓包露头的新域名加入后缀与关键字拦截
-DOMAIN-SUFFIX, zjypp7x.com, REJECT
-DOMAIN-KEYWORD, zjypp7x, REJECT
-
-# 2. 保留之前的核心拦截域名
-DOMAIN-SUFFIX, wtwvm3.com, REJECT
-DOMAIN-SUFFIX, tnw4m9b.com, REJECT
-DOMAIN-SUFFIX, moe3dze.com, REJECT
-DOMAIN-SUFFIX, gq89em.com, REJECT
-DOMAIN-SUFFIX, jjawa.com, REJECT
-DOMAIN-SUFFIX, emw5es6.com, REJECT
-DOMAIN-SUFFIX, tkfupxqu.com, REJECT
-DOMAIN-SUFFIX, 5h5hbfhh.com, REJECT
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
-DOMAIN-KEYWORD, 918api, REJECT
-DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 3. 增强正则匹配所有常见动态接口变体
-^https?:\/\/.*(zjypp7x|wtwvm3|tnw4m9b|moe3dze|gq89em|jjawa|emw5es6|tkfupxqu|5h5hbfhh).* - reject
-^https?:\/\/api\.[a-z]{8}\.com\/ - reject
+# 1. 针对所有动态域名下的广告路径进行拦截，并直接伪造 200 状态码返回空内容
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/[Aa]d\/.* - reject_dict(200)
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/IndexList\/homeFloatAd - reject_dict(200)
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/Resource\/CommentAd - reject_dict(200)
 
 [MITM]
-hostname = *.zjypp7x.com, *.wtwvm3.com, *.tnw4m9b.com, *.moe3dze.com, *.gq89em.com, *.jjawa.com, *.emw5es6.com
+# 2. 精准解密刚才抓包中出现过的后端域名，确保重写路径能生效
+hostname = *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
