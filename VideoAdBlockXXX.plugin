@@ -1,16 +1,24 @@
+#!name = Custom Video App AdBlock
+#!desc = 终极动态泛正则与随机API全覆盖拦截
+#!author = Custom
 
+[Rule]
+# 1. 核心关键词全局强杀
+DOMAIN-KEYWORD, kanshipin, REJECT
+DOMAIN-KEYWORD, sdapi, REJECT
+DOMAIN-KEYWORD, 918api, REJECT
+DOMAIN-KEYWORD, haiwaiapi, REJECT
 
-# 首页横幅广告
-URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/bannerInfo$,REJECT
+[Rewrite]
+# 2. 核心大招：无条件通杀所有 api.xxxxxx.com (8位随机小写字母) 的动态后端
+^https?:\/\/api\.[a-z]{8}\.com\/ - reject
 
-# 首页广告栏
-URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/barsIndexAdInfo$,REJECT
+# 3. 拦截常见广告路径
+^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - reject
 
-# 首页悬浮广告
-URL-REGEX,^https?://api\.sef5w7\.com/App/IndexList/homeFloatAd$,REJECT
+[Script]
+http-response ^https?:\/\/api\.[a-z]{8}\.com\/.* script-path=https://raw.githubusercontent.com/matiaoer/Loon-Config/refs/heads/main/adclean.js,requires-body=true,max-size=0,tag=随机API动态去广告净化
 
-# 其他广告信息接口
-URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/vajraInfo$,REJECT
-URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/noticeInfo$,REJECT
-# 测试广告图片域名
-DOMAIN-SUFFIX,jjawa.com,REJECT
+[MITM]
+# 4. 放行对应的动态主域名解密
+hostname = *.com
