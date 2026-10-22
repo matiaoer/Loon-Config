@@ -3,24 +3,26 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 强力通杀动态随机域名及广告接口
+Description = 动态域名及广告接口终极通杀拦截
 
 [Rule]
-# 1. 关键字通杀所有带 -api 的动态后端
-DOMAIN-KEYWORD, -api, REJECT
-
-# 2. 匹配并拒绝之前出现过的广告及随机域名特征
-DOMAIN-KEYWORD, 583-api, REJECT
-DOMAIN-KEYWORD, 7449770, REJECT
-DOMAIN-KEYWORD, 32493108, REJECT
-DOMAIN-KEYWORD, minordongzuo, REJECT
-DOMAIN-KEYWORD, kanshipin, REJECT
-DOMAIN-KEYWORD, tkfupxqu, REJECT
+# 1. 拦截所有包含 api 前缀和常见广告特征的动态域名关键字
+DOMAIN-KEYWORD, api., REJECT
+DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
+DOMAIN-KEYWORD, kanshipin, REJECT
+
+# 2. 针对你日志里频繁出现的动态域名特征做模糊匹配
+DOMAIN-KEYWORD, cjxxpgkq, REJECT
+DOMAIN-KEYWORD, tezpgdzn, REJECT
+DOMAIN-KEYWORD, bmjb2mk7, REJECT
+DOMAIN-KEYWORD, rqqakqyn, REJECT
+DOMAIN-KEYWORD, 46d5umpk, REJECT
+DOMAIN-KEYWORD, 5h5hbfhh, REJECT
 
 [Rewrite]
-# 3. 正则表达式通杀所有包含 api 且夹杂随机字符的 URL
+# 3. 强力重写：只要 URL 路径里带有 api 且夹杂随机后缀的，统统返回空或拦截
 ^https?:\/\/.*-api.*\/ - REJECT
 ^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - REJECT
 
