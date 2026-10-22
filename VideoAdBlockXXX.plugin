@@ -1,14 +1,14 @@
 
-#!name = Custom Video App AdBlock
-#!desc = 基于 HAR 实际请求路径的精准广告拦截
-#!author = Custom
 
-[Rule]
-# 广告接口：仅拦截明确的广告路径
-URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/(skitAdInfo|activityInfo|barsIndexAdInfo|bannerInfo|splashInfo|noticeInfo|vajraInfo)(\?.*)?$,REJECT
+# 首页横幅广告
+URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/bannerInfo$,REJECT
 
-# 广告配置接口
-URL-REGEX,^https?://api\.sef5w7\.com/App/ad/config(\?.*)?$,REJECT
+# 首页广告栏
+URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/barsIndexAdInfo$,REJECT
 
-# 首页悬浮广告接口
-URL-REGEX,^https?://api\.sef5w7\.com/App/IndexList/homeFloatAd(\?.*)?$,REJECT
+# 首页悬浮广告
+URL-REGEX,^https?://api\.sef5w7\.com/App/IndexList/homeFloatAd$,REJECT
+
+# 其他广告信息接口
+URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/vajraInfo$,REJECT
+URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/noticeInfo$,REJECT
