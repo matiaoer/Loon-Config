@@ -1,5 +1,5 @@
 #!name = Custom Video App AdBlock
-#!desc = 终极通杀 sdapi 及所有动态随机后端
+#!desc = 终极通杀开屏与暂停广告
 #!author = Custom
 
 [Rule]
@@ -25,9 +25,13 @@ DOMAIN-KEYWORD, haiwaiapi, REJECT
 ^https?:\/\/.*sdapi.*\/ - reject
 ^https?:\/\/.*newapi.*\/ - reject
 ^https?:\/\/api\.[a-z]{8}\.com\/ - reject
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/[Aa]d\/.* - reject_dict(200)
-^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - reject
+
+# 4. 核心拦截：精准阻断开屏、主页浮窗、评论广告，并【新增】对暂停(pause)、浮窗(float)、弹窗(pop)等接口实施空响应劫持
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ - reject_dict(200)
+
+# 5. 兜底正则
+^https?:\/\/.*\/.*(splash|ad|startup|banner|notice|pause|float).*$ - reject
 
 [MITM]
-# 4. 精准解密相关动态后端，绝不碰 *.com，完美保护 Gemini
+# 6. 精准解密相关动态后端，绝不碰 *.com，完美保护 Gemini
 hostname = *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
