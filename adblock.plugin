@@ -3,15 +3,33 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 结合 JS 脚本精准清洗开屏广告
+Description = 点对点精准封锁所有余下动态域名
 
 [Rule]
+# 1. 精准泛域名后缀封锁（直接掐断所有变体后端）
+DOMAIN-SUFFIX, tkfupxqu.com, REJECT
+DOMAIN-SUFFIX, 5h5hbfhh.com, REJECT
+DOMAIN-SUFFIX, 1fc8ab0.com, REJECT
+DOMAIN-SUFFIX, cjxxpgkq.com, REJECT
+DOMAIN-SUFFIX, rqqakqyn.com, REJECT
+DOMAIN-SUFFIX, tezpgdzn.com, REJECT
+DOMAIN-SUFFIX, bmjb2mk7.com, REJECT
+DOMAIN-SUFFIX, 46d5umpk.com, REJECT
+
+# 2. 核心关键字全局拦截
+DOMAIN-KEYWORD, tkfupxqu, REJECT
+DOMAIN-KEYWORD, 5h5hbfhh, REJECT
+DOMAIN-KEYWORD, haiwaiapi, REJECT
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 
 [Rewrite]
-^https?:\/\/.*\/.*(splash|ad|startup|banner).*$ - REJECT
+# 3. 强制重写拦截
+^https?:\/\/.*tkfupxqu.*\/ - REJECT
+^https?:\/\/.*5h5hbfhh.*\/ - REJECT
+^https?:\/\/.*haiwaiapi.*\/ - REJECT
+^https?:\/\/api\.[a-z]{8}\.com\/ - REJECT
+^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - REJECT
 
 [Script]
-# 使用你刚刚生成的 adclean.js 直链进行动态清洗
-http-response ^https?:\/\/(api\.[a-z]{8}\.com|.*sdapi.*|.*kanshipin.*)\/.* script-path=https://raw.githubusercontent.com/matiaoer/Loon-Config/refs/heads/main/adclean.js,requires-body=true,max-size=0,tag=视频App去广告净化
+http-response ^https?:\/\/(api\.[a-z]{8}\.com|.*(tkfupxqu|5h5hbfhh|haiwaiapi|sdapi|kanshipin).*)\/.* script-path=https://raw.githubusercontent.com/matiaoer/Loon-Config/refs/heads/main/adclean.js,requires-body=true,max-size=0,tag=视频App去广告净化
