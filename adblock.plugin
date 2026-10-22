@@ -3,29 +3,25 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 强力全方位拦截动态广告域名
+Description = 强力通杀动态随机域名及广告接口
 
 [Rule]
-# 1. 强制拦截所有带有 918api 和 haiwaiapi 前缀的域名
-DOMAIN-KEYWORD, 918api, REJECT
-DOMAIN-KEYWORD, haiwaiapi, REJECT
-DOMAIN-KEYWORD, emw5es6, REJECT
+# 1. 关键字通杀所有带 -api 的动态后端
+DOMAIN-KEYWORD, -api, REJECT
+
+# 2. 匹配并拒绝之前出现过的广告及随机域名特征
+DOMAIN-KEYWORD, 583-api, REJECT
+DOMAIN-KEYWORD, 7449770, REJECT
+DOMAIN-KEYWORD, 32493108, REJECT
+DOMAIN-KEYWORD, minordongzuo, REJECT
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, tkfupxqu, REJECT
-DOMAIN-KEYWORD, sdapi, REJECT
-
-# 2. 如果上面依然漏网，直接针对 918api 的泛域名后缀进行拦截
-DOMAIN-SUFFIX, e1lm13v.com, REJECT
-DOMAIN-SUFFIX, 16ygb6r.com, REJECT
-DOMAIN-SUFFIX, dl5qs3c.com, REJECT
-DOMAIN-SUFFIX, qtha36r.com, REJECT
-DOMAIN-SUFFIX, moe3dze.com, REJECT
-DOMAIN-SUFFIX, 1fc8ab0.com, REJECT
+DOMAIN-KEYWORD, 918api, REJECT
+DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 3. 拦截所有包含 api 或广告关键字的 URL
-^https?:\/\/.*918api.*\/ - REJECT
-^https?:\/\/.*haiwaiapi.*\/ - REJECT
+# 3. 正则表达式通杀所有包含 api 且夹杂随机字符的 URL
+^https?:\/\/.*-api.*\/ - REJECT
 ^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - REJECT
 
 [Script]
