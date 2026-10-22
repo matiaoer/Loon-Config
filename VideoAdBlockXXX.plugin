@@ -1,30 +1,32 @@
 #!name = Custom Video App AdBlock
-#!desc = 终极硬核分流阻断去广告
+#!desc = DNS硬核黑洞阻断（不伤Gemini）
 #!author = Custom
 
+[Host]
+# 1. 终极DNS黑洞：直接将这些广告域名指向无效地址，从源头掐断连接
+*.xqe4cxu.com = 0.0.0.0
+*.syq8gvw.com = 0.0.0.0
+*.zjypp7x.com = 0.0.0.0
+*.wtwvm3.com = 0.0.0.0
+*.tnw4m9b.com = 0.0.0.0
+*.moe3dze.com = 0.0.0.0
+*.gq89em.com = 0.0.0.0
+*.jjawa.com = 0.0.0.0
+*.emw5es6.com = 0.0.0.0
+*.tkfupxqu.com = 0.0.0.0
+*.5h5hbfhh.com = 0.0.0.0
+
 [Rule]
-# 1. 彻底在路由底层死锁所有已知和潜在的动态广告域名
-DOMAIN-KEYWORD, xqe4cxu, REJECT
-DOMAIN-KEYWORD, syq8gvw, REJECT
-DOMAIN-KEYWORD, zjypp7x, REJECT
-DOMAIN-KEYWORD, wtwvm3, REJECT
-DOMAIN-KEYWORD, tnw4m9b, multiclass-REJECT
-DOMAIN-KEYWORD, moe3dze, REJECT
-DOMAIN-KEYWORD, gq89em, REJECT
-DOMAIN-KEYWORD, jjawa, REJECT
-DOMAIN-KEYWORD, emw5es6, REJECT
-DOMAIN-KEYWORD, tkfupxqu, REJECT
-DOMAIN-KEYWORD, 5h5hbfhh, REJECT
+# 2. 路由分流规则兜底
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 2. 强力正则兜底
-^https?:\/\/api\.[a-z]{8}\.com\/ - reject
+# 3. 辅助路径拦截
 ^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - reject
 
 [MITM]
-# 3. 精准覆盖，保持 Gemini 正常
-hostname = *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
+# 4. 彻底清空或只保留极小范围，绝对不碰 *.com，Gemini 恢复 100% 正常！
+hostname =
