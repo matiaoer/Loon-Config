@@ -1,8 +1,13 @@
 #!name = Custom Video App AdBlock
-#!desc = 终极全开拦截
+#!desc = 增强型动态域名全覆盖拦截
 #!author = Custom
 
 [Rule]
+# 1. 将刚才抓包露头的新域名加入后缀与关键字拦截
+DOMAIN-SUFFIX, zjypp7x.com, REJECT
+DOMAIN-KEYWORD, zjypp7x, REJECT
+
+# 2. 保留之前的核心拦截域名
 DOMAIN-SUFFIX, wtwvm3.com, REJECT
 DOMAIN-SUFFIX, tnw4m9b.com, REJECT
 DOMAIN-SUFFIX, moe3dze.com, REJECT
@@ -17,7 +22,9 @@ DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-^https?:\/\/.*(wtwvm3|tnw4m9b|moe3dze|gq89em|jjawa|emw5es6|tkfupxqu|5h5hbfhh).* - reject
+# 3. 增强正则匹配所有常见动态接口变体
+^https?:\/\/.*(zjypp7x|wtwvm3|tnw4m9b|moe3dze|gq89em|jjawa|emw5es6|tkfupxqu|5h5hbfhh).* - reject
+^https?:\/\/api\.[a-z]{8}\.com\/ - reject
 
 [MITM]
-hostname = *.wtwvm3.com, *.tnw4m9b.com, *.moe3dze.com, *.gq89em.com, *.jjawa.com, *.emw5es6.com
+hostname = *.zjypp7x.com, *.wtwvm3.com, *.tnw4m9b.com, *.moe3dze.com, *.gq89em.com, *.jjawa.com, *.emw5es6.com
