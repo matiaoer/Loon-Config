@@ -3,10 +3,15 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 针对动态随机域名及视频App开屏广告的强力拦截
+Description = 针对 918api 及动态随机域名广告的深度拦截
 
 [Rule]
-# 1. 拦截常见随机动态 API 域名特征
+# 1. 拦截新出现的 918api 及海外 api 特征
+DOMAIN-KEYWORD, 918api, REJECT
+DOMAIN-KEYWORD, haiwaiapi, REJECT
+DOMAIN-KEYWORD, emw5es6, REJECT
+
+# 2. 之前收集的动态域名特征
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, tkfupxqu, REJECT
 DOMAIN-KEYWORD, 5h5hbfhh, REJECT
@@ -15,12 +20,10 @@ DOMAIN-KEYWORD, bmjb2mk7, REJECT
 DOMAIN-KEYWORD, tezpgdzn, REJECT
 DOMAIN-KEYWORD, rqqakqyn, REJECT
 DOMAIN-KEYWORD, 46d5umpk, REJECT
-
-# 2. 泛匹配拦截带 sdapi 或随机 api 特征的请求
 DOMAIN-KEYWORD, sdapi, REJECT
 
 [Rewrite]
-# 3. 强力阻断所有带有 splash 或 ad 关键字的开屏/广告链接
-^https?:\/\/.*\/.*(splash|ad|startup|banner).*$ - REJECT
+# 3. 强力阻断所有带有 splash、ad、startup 等字眼的请求
+^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - REJECT
 
 [Script]
