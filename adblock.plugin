@@ -3,33 +3,26 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 点对点精准封锁所有余下动态域名
+Description = 强力全域名正则封锁动态后端
 
 [Rule]
-# 1. 精准泛域名后缀封锁（直接掐断所有变体后端）
-DOMAIN-SUFFIX, tkfupxqu.com, REJECT
-DOMAIN-SUFFIX, 5h5hbfhh.com, REJECT
-DOMAIN-SUFFIX, 1fc8ab0.com, REJECT
-DOMAIN-SUFFIX, cjxxpgkq.com, REJECT
-DOMAIN-SUFFIX, rqqakqyn.com, REJECT
-DOMAIN-SUFFIX, tezpgdzn.com, REJECT
-DOMAIN-SUFFIX, bmjb2mk7.com, REJECT
-DOMAIN-SUFFIX, 46d5umpk.com, REJECT
-
-# 2. 核心关键字全局拦截
+# 1. 绝对阻断所有包含 918api, haiwaiapi, tkfupxqu 的域名
+DOMAIN-KEYWORD, 918api, REJECT
+DOMAIN-KEYWORD, haiwaiapi, REJECT
 DOMAIN-KEYWORD, tkfupxqu, REJECT
 DOMAIN-KEYWORD, 5h5hbfhh, REJECT
-DOMAIN-KEYWORD, haiwaiapi, REJECT
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 
 [Rewrite]
-# 3. 强制重写拦截
-^https?:\/\/.*tkfupxqu.*\/ - REJECT
-^https?:\/\/.*5h5hbfhh.*\/ - REJECT
-^https?:\/\/.*haiwaiapi.*\/ - REJECT
+# 2. 强力 URL 重写拦截（只要网址里带这些特征直接拒绝）
+^https?:\/\/.*(918api|haiwaiapi|tkfupxqu|5h5hbfhh|kanshipin|sdapi).*$ - REJECT
+
+# 3. 正则通杀所有 8 位随机字母的 api 域名
 ^https?:\/\/api\.[a-z]{8}\.com\/ - REJECT
+
+# 4. 拦截常见广告路径
 ^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - REJECT
 
 [Script]
-http-response ^https?:\/\/(api\.[a-z]{8}\.com|.*(tkfupxqu|5h5hbfhh|haiwaiapi|sdapi|kanshipin).*)\/.* script-path=https://raw.githubusercontent.com/matiaoer/Loon-Config/refs/heads/main/adclean.js,requires-body=true,max-size=0,tag=视频App去广告净化
+http-response ^https?:\/\/(.*(918api|haiwaiapi|tkfupxqu|5h5hbfhh|sdapi|kanshipin).*|api\.[a-z]{8}\.com)\/.* script-path=https://raw.githubusercontent.com/matiaoer/Loon-Config/refs/heads/main/adclean.js,requires-body=true,max-size=0,tag=App去广告净化
