@@ -3,20 +3,24 @@ Custom Video App AdBlock
 
 [Description]
 Author = Custom
-Description = 针对看视频类 App 的开屏及动态域名广告拦截
+Description = 针对动态随机域名及视频App开屏广告的强力拦截
 
 [Rule]
-# 1. 核心特征域名与广告联盟关键字拦截
+# 1. 拦截常见随机动态 API 域名特征
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, tkfupxqu, REJECT
+DOMAIN-KEYWORD, 5h5hbfhh, REJECT
+DOMAIN-KEYWORD, cjxxpgkq, REJECT
+DOMAIN-KEYWORD, bmjb2mk7, REJECT
+DOMAIN-KEYWORD, tezpgdzn, REJECT
+DOMAIN-KEYWORD, rqqakqyn, REJECT
+DOMAIN-KEYWORD, 46d5umpk, REJECT
 
-# 2. 如果这些动态域名属于广告或统计，可按需放开下面这行进行泛匹配拦截
-# DOMAIN-KEYWORD, 5h5hbfhh, REJECT
+# 2. 泛匹配拦截带 sdapi 或随机 api 特征的请求
+DOMAIN-KEYWORD, sdapi, REJECT
 
 [Rewrite]
-# 3. 拦截带有关键词的 URL 请求
-^https?:\/\/.*\.kanshipin.*\/ - REJECT
-^https?:\/\/.*\/.*\/splash\/ - REJECT
+# 3. 强力阻断所有带有 splash 或 ad 关键字的开屏/广告链接
+^https?:\/\/.*\/.*(splash|ad|startup|banner).*$ - REJECT
 
 [Script]
-# 4. 预留脚本位：如果阻断导致 App 报错，可后续配合 JS 清空返回数据
