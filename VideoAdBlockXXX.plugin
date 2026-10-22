@@ -1,5 +1,5 @@
 #!name = Custom Video App AdBlock
-#!desc = 终极动态泛正则与随机API全覆盖拦截
+#!desc = 纯净正则与分流去广告
 #!author = Custom
 
 [Rule]
@@ -17,8 +17,4 @@ DOMAIN-KEYWORD, haiwaiapi, REJECT
 ^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - reject
 
 [Script]
-http-response ^https?:\/\/api\.[a-z]{8}\.com\/.* script-path=https://raw.githubusercontent.com/matiaoer/Loon-Config/refs/heads/main/adclean.js,requires-body=true,max-size=0,tag=随机API动态去广告净化
-
-[MITM]
-# 4. 放行对应的动态主域名解密
-hostname = *.com
+# 注意：不需要MITM解密时，脚本可以去掉或者仅在需要时启用，这里我们保留规则和重写即可
