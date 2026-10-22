@@ -12,3 +12,5 @@ URL-REGEX,^https?://api\.sef5w7\.com/App/IndexList/homeFloatAd$,REJECT
 # 其他广告信息接口
 URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/vajraInfo$,REJECT
 URL-REGEX,^https?://api\.sef5w7\.com/App/Ad/noticeInfo$,REJECT
+# 测试广告图片域名
+DOMAIN-SUFFIX,jjawa.com,REJECT
