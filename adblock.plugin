@@ -1,28 +1,28 @@
-[Name]
-Custom Video App AdBlock
-
-[Description]
-Author = Custom
-Description = 强力全域名正则封锁动态后端
+#!name = Custom Video App AdBlock
+#!desc = 针对视频App开屏广告及图片域名的精准拦截
+#!author = Custom
 
 [Rule]
-# 1. 绝对阻断所有包含 918api, haiwaiapi, tkfupxqu 的域名
-DOMAIN-KEYWORD, 918api, REJECT
-DOMAIN-KEYWORD, haiwaiapi, REJECT
-DOMAIN-KEYWORD, tkfupxqu, REJECT
-DOMAIN-KEYWORD, 5h5hbfhh, REJECT
+# 1. 直接阻断疑似开屏广告的图片域名与跳转域名
+DOMAIN-SUFFIX, jjawa.com, REJECT
+DOMAIN-SUFFIX, emw5es6.com, REJECT
+DOMAIN-KEYWORD, jjawa, REJECT
+DOMAIN-KEYWORD, emw5es6, REJECT
+
+# 2. 之前的广告/外围接口一并封锁
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
+DOMAIN-KEYWORD, 918api, REJECT
+DOMAIN-KEYWORD, haiwaiapi, REJECT
+
+# 3. 备选方案：如果上面还拦不住，把下面这4行的井号(#)删掉试试（注意：如果删掉井号后App打不开，说明这是正常业务接口，需再把井号加回来）
+# DOMAIN-SUFFIX, wtwvm3.com, REJECT
+# DOMAIN-SUFFIX, tnw4m9b.com, REJECT
+# DOMAIN-SUFFIX, moe3dze.com, REJECT
+# DOMAIN-SUFFIX, gq89em.com, REJECT
 
 [Rewrite]
-# 2. 强力 URL 重写拦截（只要网址里带这些特征直接拒绝）
-^https?:\/\/.*(918api|haiwaiapi|tkfupxqu|5h5hbfhh|kanshipin|sdapi).*$ - REJECT
+^https?:\/\/.*(jjawa|emw5es6).* - reject
 
-# 3. 正则通杀所有 8 位随机字母的 api 域名
-^https?:\/\/api\.[a-z]{8}\.com\/ - REJECT
-
-# 4. 拦截常见广告路径
-^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - REJECT
-
-[Script]
-http-response ^https?:\/\/(.*(918api|haiwaiapi|tkfupxqu|5h5hbfhh|sdapi|kanshipin).*|api\.[a-z]{8}\.com)\/.* script-path=https://raw.githubusercontent.com/matiaoer/Loon-Config/refs/heads/main/adclean.js,requires-body=true,max-size=0,tag=App去广告净化
+[MITM]
+hostname = *.jjawa.com, *.emw5es6.com, *.wtwvm3.com, *.tnw4m9b.com, *.moe3dze.com, *.gq89em.com
