@@ -1,24 +1,30 @@
 #!name = Custom Video App AdBlock
-#!desc = 精准解密与动态泛正则拦截
+#!desc = 终极硬核分流阻断去广告
 #!author = Custom
 
 [Rule]
-# 1. 核心关键词全局强杀
+# 1. 彻底在路由底层死锁所有已知和潜在的动态广告域名
+DOMAIN-KEYWORD, xqe4cxu, REJECT
+DOMAIN-KEYWORD, syq8gvw, REJECT
+DOMAIN-KEYWORD, zjypp7x, REJECT
+DOMAIN-KEYWORD, wtwvm3, REJECT
+DOMAIN-KEYWORD, tnw4m9b, multiclass-REJECT
+DOMAIN-KEYWORD, moe3dze, REJECT
+DOMAIN-KEYWORD, gq89em, REJECT
+DOMAIN-KEYWORD, jjawa, REJECT
+DOMAIN-KEYWORD, emw5es6, REJECT
+DOMAIN-KEYWORD, tkfupxqu, REJECT
+DOMAIN-KEYWORD, 5h5hbfhh, REJECT
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 2. 核心大招：无条件通杀所有 api.xxxxxx.com (8位随机小写字母) 的动态后端
+# 2. 强力正则兜底
 ^https?:\/\/api\.[a-z]{8}\.com\/ - reject
-
-# 3. 拦截常见广告路径
 ^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - reject
 
-[Script]
-http-response ^https?:\/\/api\.[a-z]{8}\.com\/.* script-path=https://raw.githubusercontent.com/matiaoer/Loon-Config/refs/heads/main/adclean.js,requires-body=true,max-size=0,tag=动态去广告净化
-
 [MITM]
-# 4. 只精准解密这几类动态广告和 API 域名，绝对不碰 *.com，保障 Gemini 完美运行！
-hostname = *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.tkfupxqu.com, *.5h5hbfhh.com
+# 3. 精准覆盖，保持 Gemini 正常
+hostname = *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
