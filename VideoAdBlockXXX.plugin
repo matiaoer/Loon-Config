@@ -1,32 +1,21 @@
 #!name = Custom Video App AdBlock
-#!desc = DNS硬核黑洞阻断（不伤Gemini）
+#!desc = 终极硬编码底层阻断
 #!author = Custom
 
-[Host]
-# 1. 终极DNS黑洞：直接将这些广告域名指向无效地址，从源头掐断连接
-*.xqe4cxu.com = 0.0.0.0
-*.syq8gvw.com = 0.0.0.0
-*.zjypp7x.com = 0.0.0.0
-*.wtwvm3.com = 0.0.0.0
-*.tnw4m9b.com = 0.0.0.0
-*.moe3dze.com = 0.0.0.0
-*.gq89em.com = 0.0.0.0
-*.jjawa.com = 0.0.0.0
-*.emw5es6.com = 0.0.0.0
-*.tkfupxqu.com = 0.0.0.0
-*.5h5hbfhh.com = 0.0.0.0
-
 [Rule]
-# 2. 路由分流规则兜底
+# 1. 强力泛域名与关键字黑洞
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 3. 辅助路径拦截
-^https?:\/\/.*\/.*(splash|ad|startup|banner|notice).*$ - reject
+# 2. 终极正则：无条件直接拒绝所有带随机 8 位 api 的请求
+^https?:\/\/api\.[a-z]{8}\.com\/ - reject
+
+# 3. 拦截任何带广告路径的链接
+^https?:\/\/.*\/.*(splash|ad|startup|banner|notice|开屏|广告).*$ - reject
 
 [MITM]
-# 4. 彻底清空或只保留极小范围，绝对不碰 *.com，Gemini 恢复 100% 正常！
-hostname =
+# 4. 只精准解密极小范围，保障 Gemini 绝对正常
+hostname = *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
