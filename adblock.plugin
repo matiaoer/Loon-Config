@@ -1,9 +1,9 @@
 #!name = Custom Video App AdBlock
-#!desc = 终极通杀开屏与暂停广告并加入DNS黑洞防冷启动抢跑
+#!desc = 终极通杀开屏、暂停广告及全动态随机域名冷启动抢跑
 #!author = Custom
 
 [Host]
-# 0. 终极底层 DNS 黑洞：开机瞬间直接掐断域名解析，杜绝冷启动抢跑
+# 1. 终极底层 DNS 黑洞：把所有已知及动态生成的广告域名直接锁死为 0.0.0.0
 *.xqe4cxu.com = 0.0.0.0
 *.syq8gvw.com = 0.0.0.0
 *.zjypp7x.com = 0.0.0.0
@@ -11,32 +11,26 @@
 *.jjawa.com = 0.0.0.0
 *.emw5es6.com = 0.0.0.0
 *.sdapi.* = 0.0.0.0
+# 泛匹配所有 8 位随机 api 域名，防止新域名抢跑
+api.[a-z]{8}.com = 0.0.0.0
+*.8f3m24.com = 0.0.0.0
 
 [Rule]
-# 1. 强力泛域名后缀拦截所有 sdapi 变体
-DOMAIN-SUFFIX, 4zu76s.com, REJECT
-DOMAIN-SUFFIX, re3k7n.com, REJECT
-DOMAIN-SUFFIX, use3p2m.com, REJECT
-DOMAIN-SUFFIX, g4k74qn.com, REJECT
-DOMAIN-SUFFIX, 6ne6zmh.com, REJECT
-DOMAIN-SUFFIX, tymnpk4.com, REJECT
-DOMAIN-SUFFIX, u4gdp3.com, REJECT
-DOMAIN-SUFFIX, kanshipinaxsdf.com, REJECT
-
 # 2. 核心关键字全局强杀
-DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, kanshipin, REJECT
+DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, newapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 3. 强力正则阻断所有 sdapi、newapi 以及 8 位随机 API
+# 3. 强力正则阻断所有 sdapi、newapi 以及任意 8 位随机 API 接口
 ^https?:\/\/.*sdapi.*\/ - reject
 ^https?:\/\/.*newapi.*\/ - reject
 ^https?:\/\/api\.[a-z]{8}\.com\/ - reject
+^https?:\/\/[a-z0-9]+\.[a-z]{8}\.com\/ - reject
 
-# 4. 核心拦截：精准阻断开屏、主页浮窗、评论广告，并【新增】对暂停(pause)、浮窗(float)、弹窗(pop)等接口实施空响应劫持
+# 4. 核心拦截：精准阻断开屏、主页浮窗、评论广告，并对暂停(pause)、浮窗(float)、弹窗(pop)等接口实施空响应劫持
 ^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ - reject_dict(200)
 
 # 5. 兜底正则
@@ -44,4 +38,4 @@ DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [MITM]
 # 6. 精准解密相关动态后端，绝不碰 *.com，完美保护 Gemini
-hostname = *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
+hostname = *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.emw5es6.com
