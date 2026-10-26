@@ -1,17 +1,40 @@
 #!name = Custom Video App AdBlock
-#!desc = 精准路径拦截与空响应劫持
+#!desc = iPhone13 终极通杀开屏、暂停广告及全动态随机域名冷启动抢跑
 #!author = Custom
 
+[Host]
+# 1. 底层 DNS 黑洞：锁死已知固定广告域名
+*.xqe4cxu.com = 0.0.0.0
+*.syq8gvw.com = 0.0.0.0
+*.zjypp7x.com = 0.0.0.0
+*.wtwvm3.com = 0.0.0.0
+*.jjawa.com = 0.0.0.0
+*.emw5es6.com = 0.0.0.0
+*.sdapi.* = 0.0.0.0
+*.8f3m24.com = 0.0.0.0
+
 [Rule]
+# 2. 核心：通过 URL-REGEX 直接在规则层拦截所有 8 位随机 API 和 sdapi 变体
+URL-REGEX, ^https?:\/\/api\.[a-z]{8}\.com\/, REJECT
+URL-REGEX, ^https?:\/\/.*sdapi.*, REJECT
+URL-REGEX, ^https?:\/\/.*newapi.*, REJECT
+
+# 3. 核心关键字全局强杀
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
+DOMAIN-KEYWORD, newapi, REJECT
+DOMAIN-KEYWORD, 918api, REJECT
+DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 1. 针对所有动态域名下的广告路径进行拦截，并直接伪造 200 状态码返回空内容
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/[Aa]d\/.* - reject_dict(200)
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/IndexList\/homeFloatAd - reject_dict(200)
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/Resource\/CommentAd - reject_dict(200)
+# 4. 重写层：强力正则阻断与空响应劫持
+^https?:\/\/.*sdapi.*\/ - reject
+^https?:\/\/.*newapi.*\/ - reject
+^https?:\/\/api\.[a-z]{8}\.com\/ - reject
+^https?:\/\/[a-z0-9]+\.[a-z]{8}\.com\/ - reject
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ - reject_dict(200)
+^https?:\/\/.*\/.*(splash|ad|startup|banner|notice|pause|float).*$ - reject
 
 [MITM]
-# 2. 精准解密刚才抓包中出现过的后端域名，确保重写路径能生效
-hostname = *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
+# 5. 精准解密相关动态后端，绝不碰 *.com，完美保护 Gemini
+hostname = *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com
