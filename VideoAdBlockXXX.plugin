@@ -1,23 +1,25 @@
-#!name = Custom Video App AdBlock
-#!desc = iPhone13 终极通杀开屏、暂停广告及全动态随机域名冷启动抢跑
+#!name = Custom Video App AdBlock (冷启动加固版)
+#!desc = phone13 无需全局MITM，直接通过域名正则在TLS握手层秒杀随机域名与UDP抢跑
 #!author = Custom
 
 [Host]
-# 1. 底层 DNS 黑洞：锁死已知固定广告域名
 *.xqe4cxu.com = 0.0.0.0
 *.syq8gvw.com = 0.0.0.0
 *.zjypp7x.com = 0.0.0.0
 *.wtwvm3.com = 0.0.0.0
 *.jjawa.com = 0.0.0.0
 *.emw5es6.com = 0.0.0.0
-*.sdapi.* = 0.0.0.0
 *.8f3m24.com = 0.0.0.0
 
 [Rule]
-# 2. 核心：通过 URL-REGEX 直接在规则层拦截所有 8 位随机 API 和 sdapi 变体
-URL-REGEX, ^https?:\/\/api\.[a-z]{8}\.com\/, REJECT
-URL-REGEX, ^https?:\/\/.*sdapi.*, REJECT
-URL-REGEX, ^https?:\/\/.*newapi.*, REJECT
+# 1. 阻断 QUIC/UDP 流量，防止冷启动通过 HTTP/3 绕过规则（针对相关关键字和随机域名）
+AND, ((PROTOCOL,UDP), (DOMAIN-REGEX, ^(api|[a-z0-9]{3,10})\.[a-z0-9]{6,10}\.(com|net|cn|xyz|top|vip)$)), REJECT
+
+# 2. 核心修复：用 DOMAIN-REGEX 替代 URL-REGEX（无需 MITM 解密即可拦截 HTTPS 随机域名）
+# 精准匹配 api.8位字母.com 以及 各种 6-9位杂乱字母数字组合的固定格式广告域名
+DOMAIN-REGEX, ^api\.[a-z]{8}\.com$, REJECT
+DOMAIN-REGEX, ^[a-z0-9]+\.[a-z]{8}\.com$, REJECT
+DOMAIN-REGEX, ^.*(sdapi|newapi|918api|haiwaiapi|kanshipin).*$, REJECT
 
 # 3. 核心关键字全局强杀
 DOMAIN-KEYWORD, kanshipin, REJECT
@@ -27,13 +29,12 @@ DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 
 [Rewrite]
-# 4. 重写层：强力正则阻断与空响应劫持
-^https?:\/\/.*sdapi.*\/ - reject
-^https?:\/\/.*newapi.*\/ - reject
-^https?:\/\/api\.[a-z]{8}\.com\/ - reject
-^https?:\/\/[a-z0-9]+\.[a-z]{8}\.com\/ - reject
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ - reject_dict(200)
+# 仅针对已配置 MITM 的域名做路径级精细去广告
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ - reject-dict
 ^https?:\/\/.*\/.*(splash|ad|startup|banner|notice|pause|float).*$ - reject
+
+[MITM]
+hostname = *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com
 
 [MITM]
 # 5. 精准解密相关动态后端，绝不碰 *.com，完美保护 Gemini
