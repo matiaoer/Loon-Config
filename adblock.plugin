@@ -1,26 +1,30 @@
-#!name = Custom Video App AdBlock (冷启动加固修复版)
-#!desc = 修复正则大面积误杀、MITM覆盖冲突与Rewrite路径误伤问题
+#!name = Custom Video App AdBlock (Loon 专享加固版)
+#!desc = 适配 Loon 原生语法，无需开抓包即可常态拦截随机域名与路径广告
 #!author = Custom
 
 [Rule]
-# 1. 阻断特定特征域名的 UDP/QUIC 抢跑（收紧正则：仅针对包含数字+字母混合的6-8位随机域名，避免误杀正常纯字母大厂域名）
-AND, ((PROTOCOL,UDP), (DOMAIN-REGEX, ^(api|[a-z0-9]{4,8})\.(?=[a-z0-9]*[0-9])(?=[a-z0-9]*[a-z])[a-z0-9]{6,8}\.(com|net|cn|xyz|top|vip)$)), REJECT
-
-# 2. 拦截混合数字与字母的随机广告域名（利用正向先行断言 (?=...) 确保域名必须同时包含字母和数字，彻底避免误杀 bilibili.com 等8位纯字母正常网站）
-DOMAIN-REGEX, ^(api|[a-z0-9]{3,8})\.(?=[a-z0-9]*[0-9])(?=[a-z0-9]*[a-z])[a-z0-9]{6,8}\.com$, REJECT
-
-# 3. 核心广告/统计关键字全局强杀（无需再用正则重复匹配）
+# 1. 核心广告关键字全局强杀
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, newapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 
+# 2. 封堵常见内置 HTTPDNS（防止 App 不走系统 DNS 绕过规则）
+DOMAIN-SUFFIX, httpdns.alicdn.com, REJECT
+DOMAIN-SUFFIX, httpdns-api.aliyuncs.com, REJECT
+IP-CIDR, 203.107.1.0/24, REJECT, no-resolve
+IP-CIDR, 119.29.29.98/32, REJECT, no-resolve
+IP-CIDR, 119.29.29.99/32, REJECT, no-resolve
+
+# 3. Loon 专有 URL-REGEX 匹配随机混合域名（替代 Loon 不支持的 DOMAIN-REGEX）
+URL-REGEX, ^https?:\/\/(api|[a-z0-9]{3,8})\.(?=[a-z0-9]*[0-9])(?=[a-z0-9]*[a-z])[a-z0-9]{6,8}\.com\/, REJECT
+
 [Rewrite]
-# 4. 路径级精细去广告（加入边界约束 \b 或斜杠，防止误杀 download / load / thread 等含 ad 的正常路径）
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ - reject-dict
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float)(\/|\?|$).*$ - reject-dict
+# 4. 路径级精细去广告（Loon 标准 reject-dict 与 reject 语法）
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ reject-dict
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float)(\/|\?|$).*$ reject-dict
 
 [MITM]
-# 5. 使用 %APPEND% 追加解密域名，避免覆盖其他模块；若上方已全局 REJECT (如 sdapi/kanshipin)，则无需再加入 MITM
-hostname = %APPEND% *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com
+# 5. Loon 插件不要写 %APPEND%，直接列出域名即可自动合并
+hostname = *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com
