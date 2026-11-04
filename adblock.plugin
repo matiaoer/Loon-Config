@@ -1,30 +1,42 @@
-#!name = Custom Video App AdBlock (Loon 专享加固版)
-#!desc = 适配 Loon 原生语法，无需开抓包即可常态拦截随机域名与路径广告
+#!name = 瓜子影视去广告
+#!desc = iPhone XS max 根据抓包日志定制，无需MITM即可在握手层直接秒杀 api/images/gzupdate 等所有随机域名
 #!author = Custom
 
 [Rule]
-# 1. 核心广告关键字全局强杀
+# 1. 直接封杀日志中已暴露的固定图床与热更新域名后缀
+DOMAIN-SUFFIX, jjawa.com, REJECT
+DOMAIN-SUFFIX, wtwvm3.com, REJECT
+DOMAIN-SUFFIX, emw5es6.com, REJECT
+DOMAIN-SUFFIX, xqe4cxu.com, REJECT
+DOMAIN-SUFFIX, syq8gvw.com, REJECT
+DOMAIN-SUFFIX, zjypp7x.com, REJECT
+DOMAIN-SUFFIX, 8f3m24.com, REJECT
+DOMAIN-SUFFIX, 7utqqyh.com, REJECT
+DOMAIN-SUFFIX, 67c6c7a.com, REJECT
+DOMAIN-SUFFIX, d8evzth.live, REJECT
+
+# 2. 核心修复：去掉末尾斜杠，无需 MITM 直接在 HTTPS 握手层拦截日志里的随机域名！
+# 拦截所有 api. + 6~8位随机字母数字 + .com (通杀日志里的 api.7gmsut2m.com / api.tkfupxqu.com / api.sef5w7.com 等)
+URL-REGEX, ^https?:\/\/api\.[a-z0-9]{6,8}\.(com|cn|net|live|xyz|top|vip), REJECT
+
+# 拦截所有 images. / newbie. / gzupdate 开头的随机数字字母混合域名 (通杀 images.67c6c7a.com / newbie.d8evzth.live 等)
+URL-REGEX, ^https?:\/\/(images|newbie|gzupdate[0-9]*)\.[a-z0-9]{5,10}\.(com|cn|net|live|xyz|top|vip), REJECT
+
+# 拦截其他任意前缀 + 6~8位【字母与数字混合】的随机域名
+URL-REGEX, ^https?:\/\/[a-z0-9]{2,10}\.(?=[a-z0-9]*[0-9])(?=[a-z0-9]*[a-z])[a-z0-9]{6,8}\.(com|cn|net|live|xyz|top|vip), REJECT
+
+# 3. 原有核心关键字强杀
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, newapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
-
-# 2. 封堵常见内置 HTTPDNS（防止 App 不走系统 DNS 绕过规则）
-DOMAIN-SUFFIX, httpdns.alicdn.com, REJECT
-DOMAIN-SUFFIX, httpdns-api.aliyuncs.com, REJECT
-IP-CIDR, 203.107.1.0/24, REJECT, no-resolve
-IP-CIDR, 119.29.29.98/32, REJECT, no-resolve
-IP-CIDR, 119.29.29.99/32, REJECT, no-resolve
-
-# 3. Loon 专有 URL-REGEX 匹配随机混合域名（替代 Loon 不支持的 DOMAIN-REGEX）
-URL-REGEX, ^https?:\/\/(api|[a-z0-9]{3,8})\.(?=[a-z0-9]*[0-9])(?=[a-z0-9]*[a-z])[a-z0-9]{6,8}\.com\/, REJECT
+DOMAIN-KEYWORD, gzupdate, REJECT
 
 [Rewrite]
-# 4. 路径级精细去广告（Loon 标准 reject-dict 与 reject 语法）
+# 4. 针对仍需放行主域名但剔除路径广告的情况
 ^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ reject-dict
 ^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float)(\/|\?|$).*$ reject-dict
 
 [MITM]
-# 5. Loon 插件不要写 %APPEND%，直接列出域名即可自动合并
 hostname = *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com
