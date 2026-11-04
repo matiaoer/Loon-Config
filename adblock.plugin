@@ -1,42 +1,58 @@
-#!name = 瓜子影视去广告
-#!desc = iPhone XS max 根据抓包日志定制，无需MITM即可在握手层直接秒杀 api/images/gzupdate 等所有随机域名
+#!name = Custom Video App AdBlock (Loon 终极实测版)
+#!desc = 移除 Loon 不支持的 DOMAIN-REGEX，精准封杀日志中全部 18 个广告与图床域名
 #!author = Custom
 
 [Rule]
-# 1. 直接封杀日志中已暴露的固定图床与热更新域名后缀
+# 1. 精准强杀日志中抓到的广告图片源与热更新源（100% 命中，优先于 GEOIP）
+DOMAIN-SUFFIX, pool-sg.oss-ap-southeast-1.aliyuncs.com, REJECT
+DOMAIN-SUFFIX, 4mqczu3.com, REJECT
+DOMAIN-SUFFIX, hzpabxw.com, REJECT
 DOMAIN-SUFFIX, jjawa.com, REJECT
+DOMAIN-SUFFIX, 67c6c7a.com, REJECT
+DOMAIN-SUFFIX, 7utqqyh.com, REJECT
+DOMAIN-SUFFIX, d8evzth.live, REJECT
+
+# 2. 精准强杀日志中抓到的第二波配置/广告下发接口
+DOMAIN-SUFFIX, gq89em.com, REJECT
+DOMAIN-SUFFIX, tnw4m9b.com, REJECT
+DOMAIN-SUFFIX, moe3dze.com, REJECT
+DOMAIN-SUFFIX, sef5w7.com, REJECT
+DOMAIN-SUFFIX, mxtxqe.com, REJECT
+
+# 3. 精准强杀日志中抓到的第一波并发跑马域名与历史域名
+DOMAIN-SUFFIX, 7gmsut2m.com, REJECT
+DOMAIN-SUFFIX, 5h5hbfhh.com, REJECT
+DOMAIN-SUFFIX, tkfupxqu.com, REJECT
+DOMAIN-SUFFIX, qchyzkww.com, REJECT
+DOMAIN-SUFFIX, cjxxpgkq.com, REJECT
+DOMAIN-SUFFIX, rqqakqyn.com, REJECT
+DOMAIN-SUFFIX, tezpgdzn.com, REJECT
+DOMAIN-SUFFIX, bmjb2mk7.com, REJECT
+DOMAIN-SUFFIX, 46d5umpk.com, REJECT
 DOMAIN-SUFFIX, wtwvm3.com, REJECT
 DOMAIN-SUFFIX, emw5es6.com, REJECT
 DOMAIN-SUFFIX, xqe4cxu.com, REJECT
 DOMAIN-SUFFIX, syq8gvw.com, REJECT
 DOMAIN-SUFFIX, zjypp7x.com, REJECT
 DOMAIN-SUFFIX, 8f3m24.com, REJECT
-DOMAIN-SUFFIX, 7utqqyh.com, REJECT
-DOMAIN-SUFFIX, 67c6c7a.com, REJECT
-DOMAIN-SUFFIX, d8evzth.live, REJECT
 
-# 2. 核心修复：去掉末尾斜杠，无需 MITM 直接在 HTTPS 握手层拦截日志里的随机域名！
-# 拦截所有 api. + 6~8位随机字母数字 + .com (通杀日志里的 api.7gmsut2m.com / api.tkfupxqu.com / api.sef5w7.com 等)
-URL-REGEX, ^https?:\/\/api\.[a-z0-9]{6,8}\.(com|cn|net|live|xyz|top|vip), REJECT
-
-# 拦截所有 images. / newbie. / gzupdate 开头的随机数字字母混合域名 (通杀 images.67c6c7a.com / newbie.d8evzth.live 等)
-URL-REGEX, ^https?:\/\/(images|newbie|gzupdate[0-9]*)\.[a-z0-9]{5,10}\.(com|cn|net|live|xyz|top|vip), REJECT
-
-# 拦截其他任意前缀 + 6~8位【字母与数字混合】的随机域名
-URL-REGEX, ^https?:\/\/[a-z0-9]{2,10}\.(?=[a-z0-9]*[0-9])(?=[a-z0-9]*[a-z])[a-z0-9]{6,8}\.(com|cn|net|live|xyz|top|vip), REJECT
-
-# 3. 原有核心关键字强杀
+# 4. 核心关键字全局强杀
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, newapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
 DOMAIN-KEYWORD, gzupdate, REJECT
+DOMAIN-KEYWORD, cj-images, REJECT
+
+# 5. 配合下方通配符 MITM，用已验证有效的 URL-REGEX 拦截未来新生成的随机域名
+URL-REGEX, ^https?:\/\/(api|images|cj-images|newbie|uvj[0-9]*|gzupdate[0-9]*)\.[a-z0-9]{5,10}\.(com|cn|net|live|xyz|top|vip)\/, REJECT
 
 [Rewrite]
-# 4. 针对仍需放行主域名但剔除路径广告的情况
+# 6. 路径级精细去广告
 ^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ reject-dict
 ^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float)(\/|\?|$).*$ reject-dict
 
 [MITM]
-hostname = *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com
+# 7. 关键：必须用通配符把 api.*.com 等纳入 MITM，第 5 条 URL-REGEX 和第 6 条 Rewrite 才能在不开启抓包时生效！
+hostname = api.*.com, images.*.com, cj-images.*.com, *.hzpabxw.com, *.4mqczu3.com, *.aliyuncs.com, *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com
