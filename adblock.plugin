@@ -1,42 +1,17 @@
-#!name = Custom Video App AdBlock (Loon 终极实测版)
-#!desc = 移除 Loon 不支持的 DOMAIN-REGEX，精准封杀日志中全部 18 个广告与图床域名
+#!name = Custom Video App AdBlock (Loon 保活去广告版)
+#!desc = 放行 api 正常影视数据接口解决黑屏，精准封杀广告图床并通过 MITM+Rewrite 剔除广告路径
 #!author = Custom
 
 [Rule]
-# 1. 精准强杀日志中抓到的广告图片源与热更新源（100% 命中，优先于 GEOIP）
+# 1. 仅封杀纯广告图床、热更新与统计域名（绝不封杀 api.xxx.com 主域名，防止黑屏）
 DOMAIN-SUFFIX, pool-sg.oss-ap-southeast-1.aliyuncs.com, REJECT
 DOMAIN-SUFFIX, 4mqczu3.com, REJECT
 DOMAIN-SUFFIX, hzpabxw.com, REJECT
-DOMAIN-SUFFIX, jjawa.com, REJECT
 DOMAIN-SUFFIX, 67c6c7a.com, REJECT
 DOMAIN-SUFFIX, 7utqqyh.com, REJECT
 DOMAIN-SUFFIX, d8evzth.live, REJECT
 
-# 2. 精准强杀日志中抓到的第二波配置/广告下发接口
-DOMAIN-SUFFIX, gq89em.com, REJECT
-DOMAIN-SUFFIX, tnw4m9b.com, REJECT
-DOMAIN-SUFFIX, moe3dze.com, REJECT
-DOMAIN-SUFFIX, sef5w7.com, REJECT
-DOMAIN-SUFFIX, mxtxqe.com, REJECT
-
-# 3. 精准强杀日志中抓到的第一波并发跑马域名与历史域名
-DOMAIN-SUFFIX, 7gmsut2m.com, REJECT
-DOMAIN-SUFFIX, 5h5hbfhh.com, REJECT
-DOMAIN-SUFFIX, tkfupxqu.com, REJECT
-DOMAIN-SUFFIX, qchyzkww.com, REJECT
-DOMAIN-SUFFIX, cjxxpgkq.com, REJECT
-DOMAIN-SUFFIX, rqqakqyn.com, REJECT
-DOMAIN-SUFFIX, tezpgdzn.com, REJECT
-DOMAIN-SUFFIX, bmjb2mk7.com, REJECT
-DOMAIN-SUFFIX, 46d5umpk.com, REJECT
-DOMAIN-SUFFIX, wtwvm3.com, REJECT
-DOMAIN-SUFFIX, emw5es6.com, REJECT
-DOMAIN-SUFFIX, xqe4cxu.com, REJECT
-DOMAIN-SUFFIX, syq8gvw.com, REJECT
-DOMAIN-SUFFIX, zjypp7x.com, REJECT
-DOMAIN-SUFFIX, 8f3m24.com, REJECT
-
-# 4. 核心关键字全局强杀
+# 2. 核心广告关键字强杀
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, newapi, REJECT
@@ -45,14 +20,15 @@ DOMAIN-KEYWORD, haiwaiapi, REJECT
 DOMAIN-KEYWORD, gzupdate, REJECT
 DOMAIN-KEYWORD, cj-images, REJECT
 
-# 5. 配合下方通配符 MITM，用已验证有效的 URL-REGEX 拦截未来新生成的随机域名
-URL-REGEX, ^https?:\/\/(api|images|cj-images|newbie|uvj[0-9]*|gzupdate[0-9]*)\.[a-z0-9]{5,10}\.(com|cn|net|live|xyz|top|vip)\/, REJECT
+# 3. 仅对明确是广告图床特征的前缀做正则拦截（放行 api. 前缀）
+URL-REGEX, ^https?:\/\/(cj-images|newbie|uvj[0-9]*|gzupdate[0-9]*)\.[a-z0-9]{5,10}\.(com|cn|net|live|xyz|top|vip)\/, REJECT
 
 [Rewrite]
-# 6. 路径级精细去广告
+# 4. 关键：对放行的 api.xxx.com 域名，只拦截里面的广告接口路径，保留正常视频列表接口！
+# 返回空字典 reject-dict，让 App 以为“当前没有广告配置”，从而直接跳过开屏进入主页
 ^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ reject-dict
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float)(\/|\?|$).*$ reject-dict
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float|initAd|getAd|adList)(\/|\?|$).*$ reject-dict
 
 [MITM]
-# 7. 关键：必须用通配符把 api.*.com 等纳入 MITM，第 5 条 URL-REGEX 和第 6 条 Rewrite 才能在不开启抓包时生效！
-hostname = api.*.com, images.*.com, cj-images.*.com, *.hzpabxw.com, *.4mqczu3.com, *.aliyuncs.com, *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com
+# 5. 通配符解密所有 api.*.com，让上面的第 4 步 Rewrite 能够看清并掐断里面的广告路径
+hostname = api.*.com, images.*.com, cj-images.*.com, *.hzpabxw.com, *.4mqczu3.com, *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com, *.gq89em.com, *.tnw4m9b.com, *.moe3dze.com, *.sef5w7.com, *.mxtxqe.com
