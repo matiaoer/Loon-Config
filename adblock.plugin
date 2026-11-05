@@ -1,5 +1,5 @@
-#!name = 恒时观 App 去广告 (推特安全修复版)
-#!desc = 精准拦截恒时观 App 的广告与图床，严格收窄 MITM 范围，彻底保护推特及其他正常软件
+#!name = 恒时观瓜子影视 App 去广告
+#!desc = iPhone xs Max 精准拦截恒时观 App 的广告与图床，严格收窄 MITM 范围，彻底保护推特及其他正常软件
 #!author = Custom
 
 [Rule]
