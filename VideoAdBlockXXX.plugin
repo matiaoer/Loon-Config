@@ -1,5 +1,5 @@
-#!name = Custom Video App AdBlock (冷启动加固修复版)
-#!desc = 修复正则大面积误杀、MITM覆盖冲突与Rewrite路径误伤问题
+#!name = 恒时观瓜子影视去广告
+#!desc = 13 mini 修复正则大面积误杀、MITM覆盖冲突与Rewrite路径误伤问题
 #!author = Custom
 
 [Rule]
