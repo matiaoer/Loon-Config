@@ -1,17 +1,18 @@
-#!name = Custom Video App AdBlock (Loon 保活去广告版)
-#!desc = 放行 api 正常影视数据接口解决黑屏，精准封杀广告图床并通过 MITM+Rewrite 剔除广告路径
+#!name = 恒时观 App 去广告 (推特安全修复版)
+#!desc = 精准拦截恒时观 App 的广告与图床，严格收窄 MITM 范围，彻底保护推特及其他正常软件
 #!author = Custom
 
 [Rule]
-# 1. 仅封杀纯广告图床、热更新与统计域名（绝不封杀 api.xxx.com 主域名，防止黑屏）
+# 1. 严格封杀恒时观 App 专属的广告图片源与第三方图床
 DOMAIN-SUFFIX, pool-sg.oss-ap-southeast-1.aliyuncs.com, REJECT
 DOMAIN-SUFFIX, 4mqczu3.com, REJECT
 DOMAIN-SUFFIX, hzpabxw.com, REJECT
 DOMAIN-SUFFIX, 67c6c7a.com, REJECT
 DOMAIN-SUFFIX, 7utqqyh.com, REJECT
 DOMAIN-SUFFIX, d8evzth.live, REJECT
+DOMAIN-SUFFIX, jjawa.com, REJECT
 
-# 2. 核心广告关键字强杀
+# 2. 核心广告关键字全局强杀
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
 DOMAIN-KEYWORD, newapi, REJECT
@@ -20,15 +21,14 @@ DOMAIN-KEYWORD, haiwaiapi, REJECT
 DOMAIN-KEYWORD, gzupdate, REJECT
 DOMAIN-KEYWORD, cj-images, REJECT
 
-# 3. 仅对明确是广告图床特征的前缀做正则拦截（放行 api. 前缀）
+# 3. 广告图床正则拦截
 URL-REGEX, ^https?:\/\/(cj-images|newbie|uvj[0-9]*|gzupdate[0-9]*)\.[a-z0-9]{5,10}\.(com|cn|net|live|xyz|top|vip)\/, REJECT
 
 [Rewrite]
-# 4. 关键：对放行的 api.xxx.com 域名，只拦截里面的广告接口路径，保留正常视频列表接口！
-# 返回空字典 reject-dict，让 App 以为“当前没有广告配置”，从而直接跳过开屏进入主页
+# 4. 路径级精细去广告：精准剥离恒时观 App 接口里的广告路径
 ^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ reject-dict
 ^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float|initAd|getAd|adList)(\/|\?|$).*$ reject-dict
 
 [MITM]
-# 5. 通配符解密所有 api.*.com，让上面的第 4 步 Rewrite 能够看清并掐断里面的广告路径
-hostname = api.*.com, images.*.com, cj-images.*.com, *.hzpabxw.com, *.4mqczu3.com, *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com, *.gq89em.com, *.tnw4m9b.com, *.moe3dze.com, *.sef5w7.com, *.mxtxqe.com
+# 5. 【核心安全区】只解密广告相关的图床和特定域名，绝对不碰 api.*.com 或其他通用前缀，完美保护推特！
+hostname = cj-images.*.com, *.hzpabxw.com, *.4mqczu3.com, *.aliyuncs.com, *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com, *.gq89em.com, *.tnw4m9b.com, *.moe3dze.com, *.sef5w7.com, *.mxtxqe.com, *.7gmsut2m.com, *.tkfupxqu.com, *.5h5hbfhh.com
