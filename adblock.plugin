@@ -1,27 +1,33 @@
 #!name = 恒时观瓜子影视 App 去广告
-#!desc = 精准放行 /upload/vod/ 剧集海报，定向拦截 /upload/ita/ 广告图与广告接口
+#!desc = 满血恢复原版强力去广告，唯独保护 /upload/vod/ 电视剧封面不裂图
 #!author = Custom
 
 [Rule]
-# 1. 仅拦截纯广告第三方域名（绝不封杀 jjawa.com 和 cj-images，否则必裂图！）
+# 1. 严格封杀纯广告域名（仅剔除放剧照的 jjawa.com）
+DOMAIN-SUFFIX, pool-sg.oss-ap-southeast-1.aliyuncs.com, REJECT
 DOMAIN-SUFFIX, 4mqczu3.com, REJECT
 DOMAIN-SUFFIX, hzpabxw.com, REJECT
 DOMAIN-SUFFIX, 67c6c7a.com, REJECT
 DOMAIN-SUFFIX, 7utqqyh.com, REJECT
 DOMAIN-SUFFIX, d8evzth.live, REJECT
+
+# 2. 核心广告关键字全局强杀（仅剔除 cj-images 剧照前缀）
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
+DOMAIN-KEYWORD, newapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
+DOMAIN-KEYWORD, gzupdate, REJECT
 
-# 2. 精准拦截 cj-images 图床下的 /upload/ita/ 广告图片目录（同时保护 /upload/vod/ 电视剧海报）
+# 3. 精准拦截广告图床与 /upload/ita/ 动态广告图（彻底放行 /upload/vod/ 电视剧海报）
 URL-REGEX, ^https?:\/\/cj-images\.[a-z0-9-]+\.[a-z]+\/upload\/ita\/, REJECT
+URL-REGEX, ^https?:\/\/(newbie|uvj[0-9]*|gzupdate[0-9]*)\.[a-z0-9]{5,10}\.(com|cn|net|live|xyz|top|vip)\/, REJECT
 
 [Rewrite]
-# 3. 路径级精细去广告（严格加上 \/ 边界，彻底杜绝 ads? 误伤 /upload/vod/ 正片封面）
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pauseAd|floatAd|popAd|bannerAd).*)$ reject-dict
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/(?:.*\/)?(splash|ads?|startup|initAd|getAd|adList)(\/|\?|$).*$ reject-dict
+# 4. 恢复原版强力路径去广告（仅将第二条加上 \/ 边界，防止 ads? 误杀 /upload/vod/ 正片图片）
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ reject-dict
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/(?:.*\/)?(splash|ads?|startup|banner|notice|pause|float|initAd|getAd|adList)(\/|\?|$).*$ reject-dict
 
 [MITM]
-# 4. 仅解密图床与主 API 域名以供 URL-REGEX 和 Rewrite 生效
-hostname = cj-images.jjawa.com, *.f97568.com, *.hzpabxw.com, *.4mqczu3.com
+# 5. 满血恢复全部广告与 API 节点解密（包含抓包新发现的 f97568.com）
+hostname = cj-images.jjawa.com, *.f97568.com, *.hzpabxw.com, *.4mqczu3.com, *.aliyuncs.com, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com, *.gq89em.com, *.tnw4m9b.com, *.moe3dze.com, *.sef5w7.com, *.mxtxqe.com, *.7gmsut2m.com, *.tkfupxqu.com, *.5h5hbfhh.com
