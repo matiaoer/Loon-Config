@@ -1,13 +1,9 @@
-[Name]
-# 恒时观瓜子影视 App 去广告
-[Author]
-# Custom
-[Description]
-# iPhone 精准拦截恒时观 App 的广告与图床，严格收窄 MITM 范围，彻底保护推特及其他正常软件
+#!name = 恒时观瓜子影视 App 去广告
+#!desc = 精准拦截广告接口，放行阿里云OSS与采集站剧集封面图床
+#!author = Custom
 
 [Rule]
-# 1. 严格封杀恒时观 App 专属的广告图片源与第三方图床
-DOMAIN-SUFFIX, pool-sg.oss-ap-southeast-1.aliyuncs.com, REJECT
+# 1. 仅封杀纯广告域名（已移除 aliyuncs.com 避免剧集封面裂图）
 DOMAIN-SUFFIX, 4mqczu3.com, REJECT
 DOMAIN-SUFFIX, hzpabxw.com, REJECT
 DOMAIN-SUFFIX, 67c6c7a.com, REJECT
@@ -15,23 +11,17 @@ DOMAIN-SUFFIX, 7utqqyh.com, REJECT
 DOMAIN-SUFFIX, d8evzth.live, REJECT
 DOMAIN-SUFFIX, jjawa.com, REJECT
 
-# 2. 核心广告关键字全局强杀
+# 2. 核心广告关键字（已移除 cj-images 和 gzupdate 采集站封面图床关键字）
 DOMAIN-KEYWORD, kanshipin, REJECT
 DOMAIN-KEYWORD, sdapi, REJECT
-DOMAIN-KEYWORD, newapi, REJECT
 DOMAIN-KEYWORD, 918api, REJECT
 DOMAIN-KEYWORD, haiwaiapi, REJECT
-DOMAIN-KEYWORD, gzupdate, REJECT
-DOMAIN-KEYWORD, cj-images, REJECT
-
-# 3. 广告图床正则拦截
-URL-REGEX, ^https?:\/\/(cj-images|newbie|uvj[0-9]*|gzupdate[0-9]*)\.[a-z0-9]{5,10}\.(com|cn|net|live|xyz|top|vip)\/, REJECT
 
 [Rewrite]
-# 4. 路径级精细去广告：在 Loon 中使用标准 reject 动作剥离广告路径
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ reject
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float|initAd|getAd|adList)(\/|\?|$).*$ reject
+# 3. 路径级精细去广告（移除了 recommend 等正常剧集列表词，恢复 reject-dict 返回空JSON防卡死）
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pauseAd|floatAd|popAd|bannerAd).*)$ reject-dict
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|initAd|getAd|adList)(\/|\?|$).*$ reject-dict
 
 [MITM]
-# 5. 【核心安全区】精准解密广告域名，彻底保护推特等正常软件（Loon 支持直接罗列主机名）
-hostname = *.hzpabxw.com, *.4mqczu3.com, *.aliyuncs.com, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com, *.gq89em.com, *.tnw4m9b.com, *.moe3dze.com, *.sef5w7.com, *.mxtxqe.com, *.7gmsut2m.com, *.tkfupxqu.com, *.5h5hbfhh.com
+# 4. 仅解密核心域名（移除了带星号的无效通配符与阿里云图床，提升图片加载速度）
+hostname = *.hzpabxw.com, *.4mqczu3.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com, *.gq89em.com, *.tnw4m9b.com, *.moe3dze.com, *.sef5w7.com, *.mxtxqe.com, *.7gmsut2m.com, *.tkfupxqu.com, *.5h5hbfhh.com
