@@ -1,6 +1,9 @@
-#!name = 恒时观瓜子影视 App 去广告
-#!desc = iPhone xs Max 精准拦截恒时观 App 的广告与图床，严格收窄 MITM 范围，彻底保护推特及其他正常软件
-#!author = Custom
+[Name]
+# 恒时观瓜子影视 App 去广告
+[Author]
+# Custom
+[Description]
+# iPhone 精准拦截恒时观 App 的广告与图床，严格收窄 MITM 范围，彻底保护推特及其他正常软件
 
 [Rule]
 # 1. 严格封杀恒时观 App 专属的广告图片源与第三方图床
@@ -25,10 +28,10 @@ DOMAIN-KEYWORD, cj-images, REJECT
 URL-REGEX, ^https?:\/\/(cj-images|newbie|uvj[0-9]*|gzupdate[0-9]*)\.[a-z0-9]{5,10}\.(com|cn|net|live|xyz|top|vip)\/, REJECT
 
 [Rewrite]
-# 4. 路径级精细去广告：精准剥离恒时观 App 接口里的广告路径
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ reject-dict
-^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float|initAd|getAd|adList)(\/|\?|$).*$ reject-dict
+# 4. 路径级精细去广告：在 Loon 中使用标准 reject 动作剥离广告路径
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/App\/([Aa]d\/.*|[Ii]ndexList\/homeFloatAd|[Rr]esource\/CommentAd|.*(pause|float|pop|banner|notice|recommend|stop).*)$ reject
+^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]+\/.*\/(splash|ads?|startup|banner|notice|pause|float|initAd|getAd|adList)(\/|\?|$).*$ reject
 
 [MITM]
-# 5. 【核心安全区】只解密广告相关的图床和特定域名，绝对不碰 api.*.com 或其他通用前缀，完美保护推特！
-hostname = cj-images.*.com, *.hzpabxw.com, *.4mqczu3.com, *.aliyuncs.com, *.sdapi.*, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com, *.gq89em.com, *.tnw4m9b.com, *.moe3dze.com, *.sef5w7.com, *.mxtxqe.com, *.7gmsut2m.com, *.tkfupxqu.com, *.5h5hbfhh.com
+# 5. 【核心安全区】精准解密广告域名，彻底保护推特等正常软件（Loon 支持直接罗列主机名）
+hostname = *.hzpabxw.com, *.4mqczu3.com, *.aliyuncs.com, *.kanshipin*.com, *.xqe4cxu.com, *.syq8gvw.com, *.zjypp7x.com, *.wtwvm3.com, *.jjawa.com, *.emw5es6.com, *.8f3m24.com, *.gq89em.com, *.tnw4m9b.com, *.moe3dze.com, *.sef5w7.com, *.mxtxqe.com, *.7gmsut2m.com, *.tkfupxqu.com, *.5h5hbfhh.com
